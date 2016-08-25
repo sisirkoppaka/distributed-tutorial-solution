@@ -19,7 +19,7 @@ class LocationOpsSpec extends FlatSpec with Matchers {
     checkZip(goodZipLong).isSuccess
   }
 
-  it should "reject all mal-formed zips" in {
-    assert(false)
+  it should "reject mal-formed zips" in {
+    badZips.map( checkZip ).map( _.isFailure ).fold( true ) { _ && _ }
   }
 }
