@@ -15,12 +15,16 @@ object ParcelOps {
     ActiveParcel(pk.src, pk.dst, pk.history + PickedUp(ts)).success
   }
 
-  def receivePackage(pk: ActiveParcel, ts: DateTime, loc: Location): ActiveParcel = {
-    ActiveParcel(pk.src, pk.dst, pk.history + Received(ts, loc))
+  def receivePackage(pk: ActiveParcel, ts: DateTime, loc: ShippingFacility): ValidationNel[String, ActiveParcel] = {
+    ActiveParcel(pk.src, pk.dst, pk.history + Received(ts, loc)).success
   }
 
-  def dispatchPackage(pk: ActiveParcel, ts: DateTime, loc: Location, dst: Location): ActiveParcel = {
-    ActiveParcel(pk.src, pk.dst, pk.history + Dispatched(ts, loc, dst))
+  def dispatchPackage(pk: ActiveParcel, ts: DateTime, loc: ShippingFacility, dst: Location): ValidationNel[String, ActiveParcel] = {
+    ActiveParcel(pk.src, pk.dst, pk.history + Dispatched(ts, loc, dst)).success
+  }
+
+  def failDeliverPackage(pk: ActiveParcel, ts: DateTime, msg: String): ValidationNel[String, ActiveParcel] = {
+    ActiveParcel(pk.src, pk.dst, pk.history + DeliveryFailed(ts, msg)).success
   }
 
   def deliverPackage(pk: ActiveParcel, ts: DateTime): ValidationNel[String, DeliveredParcel] = {
