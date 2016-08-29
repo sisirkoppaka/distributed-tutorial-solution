@@ -4,6 +4,16 @@ import org.scalatest.{FlatSpec, Matchers}
 import LocationOps._
 
 class LocationOpsSpec extends FlatSpec with Matchers {
+  behavior of "checkAddress"
+
+  it should "fail on an empty string" in {
+    checkAddress("").isFailure
+  }
+
+  it should "succeed on a well-formed address" in {
+    checkAddress("101 Example Way, New York, NY 10001").isSuccess
+  }
+
   behavior of "checkZip"
 
   val goodAddress = "111 This Place"
