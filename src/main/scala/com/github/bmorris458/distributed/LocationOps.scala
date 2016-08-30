@@ -19,11 +19,11 @@ object LocationOps {
       * This could probably be accomplished much more cleanly with regex, but
       * this is sufficient for a first pass.
       */
-    if (zip.size === 5) {
+    if (zip.length === 5) {
       if (Try(zip.toInt).isSuccess) zip.successNel
       else s"Invalid zip: $zip".failureNel
     }
-    else if (zip.size === 10) {
+    else if (zip.length === 10) {
       val splitZip = zip.split("-")
       if (splitZip.size != 2) s"Invalid zip: $zip".failureNel
       else if (Try(splitZip(0).toInt).isSuccess && Try(splitZip(1).toInt).isSuccess) zip.successNel
