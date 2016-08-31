@@ -7,27 +7,28 @@ import Scalaz._
 import model._
 
 object ParcelOps {
-  def schedulePickup(src: Location, dst: Location, ts: DateTime): ValidationNel[String,Parcel] = {
-    ReadyParcel(src, dst, Set[Record](ScheduledPickup(ts))).success
+  //Evaluate if ts > now as a test in the beginning.
+  def schedulePickup(pid: ParcelId, src: Location, dst: Location, ts: DateTime): ValidationNel[String,ScheduledPickup] = {
+    ScheduledPickup(pid, src, dst, ts).success
   }
 
-  def pickupPackage(pk: ReadyParcel, ts: DateTime): ValidationNel[String, ActiveParcel] = {
-    ActiveParcel(pk.src, pk.dst, pk.history + PickedUp(ts)).success
+  def pickupPackage(pid: ParcelId, ts: DateTime): ValidationNel[String, PickedUp] = {
+    PickedUp(pid, ts).success
   }
 
-  def receivePackage(pk: ActiveParcel, ts: DateTime, loc: ShippingFacility): ValidationNel[String, ActiveParcel] = {
-    ActiveParcel(pk.src, pk.dst, pk.history + Received(ts, loc)).success
+  def receivePackage(pid: ParcelId, loc: ShippingFacility, ts: DateTime): ValidationNel[String, Received] = {
+    Received(pid, loc, ts).success
   }
 
-  def dispatchPackage(pk: ActiveParcel, ts: DateTime, loc: ShippingFacility, dst: Location): ValidationNel[String, ActiveParcel] = {
-    ActiveParcel(pk.src, pk.dst, pk.history + Dispatched(ts, loc, dst)).success
+  def dispatchPackage(pid: ParcelId,  src: ShippingFacility, dst: Location, ts: DateTime): ValidationNel[String, Dispatched] = {
+    Dispatched( pid, src, dst, ts).success
   }
 
-  def failDeliverPackage(pk: ActiveParcel, ts: DateTime, msg: String): ValidationNel[String, ActiveParcel] = {
-    ActiveParcel(pk.src, pk.dst, pk.history + DeliveryFailed(ts, msg)).success
+  def failDeliverPackage(pid: ParcelId, ts: DateTime, msg: String): ValidationNel[String, DeliveryFailed] = {
+    DeliveryFailed( pid, msg, ts).success
   }
 
-  def deliverPackage(pk: ActiveParcel, ts: DateTime): ValidationNel[String, DeliveredParcel] = {
-    DeliveredParcel(pk.src, pk.dst, pk.history + Delivered(ts)).success
+  def deliverPackage(pid: ParcelId, ts: DateTime): ValidationNel[String, Delivered] = {
+    Delivered(pid, ts).success
   }
 }

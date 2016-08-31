@@ -1,5 +1,5 @@
-package com.github.bmorris458.distributed
+package com.github.bmorris458
 
-package object model {
-  type PkgHistory = Set[Record]
+package object distributed {
+  type ParcelState = scala.collection.immutable.Map[ParcelId, Parcel]
 }
